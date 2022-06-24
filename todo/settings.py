@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework_simplejwt',
+    'oauth2_provider',
+   'social_django',
+   'drf_social_oauth2',
     'rest_framework',
     'corsheaders',
     'user',
@@ -69,6 +72,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+# Social Authentication Settings
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -98,11 +105,29 @@ DATABASES = {
     }
 }
 
+
+AUTHENTICATION_BACKENDS = (
+  'social_core.backends.google.GoogleOAuth2',
+  'drf_social_oauth2.backends.DjangoOAuth2',
+  'django.contrib.auth.backends.ModelBackend',
+)
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'drf_social_oauth2.authentication.SocialAuthentication',
     )
 }
+
+# Setting for google auth
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "your google oauth2 key"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "your google oauth2 secret"
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+   'https://www.googleapis.com/auth/userinfo.email',
+   'https://www.googleapis.com/auth/userinfo.profile',
+]
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
